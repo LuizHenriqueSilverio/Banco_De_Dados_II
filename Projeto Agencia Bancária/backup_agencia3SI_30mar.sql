@@ -14,10 +14,12 @@
 
 
 -- Copiando estrutura do banco de dados para agencia3si
+DROP DATABASE IF EXISTS `agencia3si`;
 CREATE DATABASE IF NOT EXISTS `agencia3si` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `agencia3si`;
 
 -- Copiando estrutura para tabela agencia3si.cliente
+DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
   `idCLIENTE` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(150) NOT NULL,
@@ -28,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`idCLIENTE`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.cliente: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.cliente: ~8 rows (aproximadamente)
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
 INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `telefone`) VALUES
 	(1, 'Telma Almeida', '123.456.789-10', 'MG 999.999-99', '1980-11-25', '(35)4002-8922'),
@@ -42,6 +44,7 @@ INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `tele
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.conta
+DROP TABLE IF EXISTS `conta`;
 CREATE TABLE IF NOT EXISTS `conta` (
   `idCONTA` int(11) NOT NULL AUTO_INCREMENT,
   `tipo` enum('Salário','Corrente','Poupança') NOT NULL,
@@ -60,6 +63,7 @@ INSERT INTO `conta` (`idCONTA`, `tipo`, `saldo`, `senha`) VALUES
 /*!40000 ALTER TABLE `conta` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.contavinculada
+DROP TABLE IF EXISTS `contavinculada`;
 CREATE TABLE IF NOT EXISTS `contavinculada` (
   `CLIENTE_idCLIENTE` int(11) NOT NULL,
   `CONTA_idCONTA` int(11) NOT NULL,
@@ -79,6 +83,7 @@ INSERT INTO `contavinculada` (`CLIENTE_idCLIENTE`, `CONTA_idCONTA`, `dataAbertur
 /*!40000 ALTER TABLE `contavinculada` ENABLE KEYS */;
 
 -- Copiando estrutura para view agencia3si.v_clientesordemcrescente
+DROP VIEW IF EXISTS `v_clientesordemcrescente`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
 CREATE TABLE `v_clientesordemcrescente` (
 	`nome` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
@@ -86,6 +91,7 @@ CREATE TABLE `v_clientesordemcrescente` (
 ) ENGINE=MyISAM;
 
 -- Copiando estrutura para view agencia3si.v_contasclientes
+DROP VIEW IF EXISTS `v_contasclientes`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
 CREATE TABLE `v_contasclientes` (
 	`nome` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
@@ -94,17 +100,20 @@ CREATE TABLE `v_contasclientes` (
 ) ENGINE=MyISAM;
 
 -- Copiando estrutura para view agencia3si.v_totalfinanceiro
+DROP VIEW IF EXISTS `v_totalfinanceiro`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
 CREATE TABLE `v_totalfinanceiro` (
 	`SUM(saldo)` DOUBLE(19,2) NULL
 ) ENGINE=MyISAM;
 
 -- Copiando estrutura para view agencia3si.v_clientesordemcrescente
+DROP VIEW IF EXISTS `v_clientesordemcrescente`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_clientesordemcrescente`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientesordemcrescente` AS (SELECT nome, cpf FROM cliente ORDER BY nome) ;
 
 -- Copiando estrutura para view agencia3si.v_contasclientes
+DROP VIEW IF EXISTS `v_contasclientes`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_contasclientes`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_contasclientes` AS SELECT cli.nome, con.tipo, con.saldo FROM cliente AS cli
@@ -114,6 +123,7 @@ ON cli.idCLIENTE = cv.CLIENTE_idCLIENTE
 AND con.idCONTA = cv.CONTA_idCONTA ;
 
 -- Copiando estrutura para view agencia3si.v_totalfinanceiro
+DROP VIEW IF EXISTS `v_totalfinanceiro`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_totalfinanceiro`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_totalfinanceiro` AS (SELECT SUM(saldo) FROM conta) ;
