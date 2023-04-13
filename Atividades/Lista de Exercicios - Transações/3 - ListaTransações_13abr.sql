@@ -12,4 +12,4 @@ BEGIN;
 	WHERE nome LIKE "%Hortência%";
 	
 	SELECT * FROM pacientes;
-ROLLBACK;
+COMMIT;
