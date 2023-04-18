@@ -11,8 +11,14 @@ AFTER DELETE
 ON contavinculada
 FOR EACH ROW
 BEGIN
+
+	SELECT nome INTO @nomeCliente FROM cliente
+	WHERE idCliente = OLD.CLIENTE_idCliente;
+	
+	SET @mensagem = CONCAT("Exclusão de conta do cliente: ", @nomeCliente);
+
 	INSERT INTO auditoria 
-	VALUES(NULL, "Exclusão de Reistro", "contavinculada", NOW(), USER());
+	VALUES(NULL, @mensagem, "contavinculada", NOW(), USER());
 END$
 
 delimiter ;

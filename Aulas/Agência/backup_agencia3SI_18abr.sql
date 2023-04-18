@@ -27,10 +27,12 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
 -- Copiando dados para a tabela agencia3si.auditoria: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
+INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
+	(1, 'Exclusão de conta do cliente: Afrânio Rosa', 'contavinculada', '2023-04-18 10:46:38', 'root@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.cliente
@@ -140,8 +142,14 @@ AFTER DELETE
 ON contavinculada
 FOR EACH ROW
 BEGIN
+
+	SELECT nome INTO @nomeCliente FROM cliente
+	WHERE idCliente = OLD.CLIENTE_idCliente;
+	
+	SET @mensagem = CONCAT("Exclusão de conta do cliente: ", @nomeCliente);
+
 	INSERT INTO auditoria 
-	VALUES(NULL, "Exclusão de Reistro", "contavinculada", NOW(), USER());
+	VALUES(NULL, @mensagem, "contavinculada", NOW(), USER());
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
