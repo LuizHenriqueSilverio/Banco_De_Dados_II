@@ -27,12 +27,14 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
--- Copiando dados para a tabela agencia3si.auditoria: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.auditoria: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
 INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
-	(1, 'Exclusão de conta do cliente: Afrânio Rosa', 'contavinculada', '2023-04-18 10:46:38', 'root@localhost');
+	(1, 'Exclusão de conta do cliente: Afrânio Rosa', 'contavinculada', '2023-04-18 10:46:38', 'root@localhost'),
+	(2, 'CPF do Cliente: Afrânio Rosa foi alterado para 086.178.039-04. CPF antigo era: 777.777.777-77', 'cliente', '2023-04-19 08:08:30', 'root@localhost'),
+	(3, 'Código da conta: 5, Tipo de Conta: Corrente, Saldo inicial: R$2500.00', 'conta', '2023-04-19 08:19:54', 'root@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.cliente
@@ -57,7 +59,7 @@ INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `tele
 	(5, 'Lúcia Silviano', '444.036.444-77', NULL, '1989-01-15', NULL),
 	(6, 'Fabiana Silva', '999.999.999-99', NULL, '1970-12-02', NULL),
 	(7, 'José Reginaldo', '888.888.888-88', NULL, '1964-01-30', NULL),
-	(8, 'Afrânio Rosa', '777.777.777-77', NULL, '1958-06-12', NULL),
+	(8, 'Afrânio Rosa', '086.178.039-04', NULL, '1958-06-12', NULL),
 	(12, 'FERNANDO TELLES', '444.555.666-77', 'MG 17.235.901', '1975-05-12', '(35)3295-1111'),
 	(13, 'ALESSANDRA SILVA TELLES', '555.666.777-88', 'MG 11.245.981', '1985-05-22', '(35)3002-4922'),
 	(14, 'FERNANDO TELLES', '666.777.888-99', 'MG 10.214.957', '1979-03-19', '(35)3295-6666');
@@ -71,14 +73,15 @@ CREATE TABLE IF NOT EXISTS `conta` (
   `saldo` float(10,2) NOT NULL DEFAULT 0.00,
   `senha` char(8) NOT NULL,
   PRIMARY KEY (`idCONTA`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.conta: ~3 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.conta: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `conta` DISABLE KEYS */;
 INSERT INTO `conta` (`idCONTA`, `tipo`, `saldo`, `senha`) VALUES
 	(2, 'Poupança', 1375.00, 'teste'),
 	(3, 'Poupança', 3322.00, 'senha12'),
-	(4, 'Corrente', 125.10, '*23AB*');
+	(4, 'Corrente', 125.10, '*23AB*'),
+	(5, 'Corrente', 2500.00, '081900PO');
 /*!40000 ALTER TABLE `conta` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.contavinculada
@@ -150,6 +153,41 @@ BEGIN
 
 	INSERT INTO auditoria 
 	VALUES(NULL, @mensagem, "contavinculada", NOW(), USER());
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Copiando estrutura para trigger agencia3si.tri_LogFiscalizaCPF
+DROP TRIGGER IF EXISTS `tri_LogFiscalizaCPF`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER tri_LogFiscalizaCPF 
+AFTER UPDATE ON cliente
+FOR EACH ROW
+BEGIN
+	
+	SET @mensagem = CONCAT("CPF do Cliente: ", NEW.nome, " foi alterado para ", NEW.cpf, ". CPF antigo era: ", OLD.cpf);
+	INSERT INTO auditoria
+	VALUES(NULL, @mensagem, "cliente", NOW(), USER());
+	
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Copiando estrutura para trigger agencia3si.tri_LogInsereConta
+DROP TRIGGER IF EXISTS `tri_LogInsereConta`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER tri_LogInsereConta
+AFTER INSERT ON conta
+FOR EACH ROW
+BEGIN
+	
+	SET @mensagem = CONCAT("Código da conta: ", NEW.idConta, ", Tipo de Conta: ", NEW.tipo
+	, ", Saldo inicial: R$", NEW.saldo);
+	INSERT INTO auditoria
+	VALUES(NULL, @mensagem, "conta", NOW(), USER());
+	
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
