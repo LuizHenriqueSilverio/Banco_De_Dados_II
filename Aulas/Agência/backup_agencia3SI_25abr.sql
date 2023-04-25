@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`idCLIENTE`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.cliente: ~11 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.cliente: ~13 rows (aproximadamente)
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
 INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `telefone`) VALUES
 	(1, 'TELMA ALMEIDA', '123.456.789-10', 'MG 999.999-99', '1980-11-25', '(35)4002-8922'),
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `conta` (
   PRIMARY KEY (`idCONTA`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.conta: ~3 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.conta: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `conta` DISABLE KEYS */;
 INSERT INTO `conta` (`idCONTA`, `tipo`, `saldo`, `senha`) VALUES
 	(2, 'Poupança', 1375.00, 'teste'),
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `contavinculada` (
   CONSTRAINT `fk_CLIENTE_has_CONTA_CONTA1` FOREIGN KEY (`CONTA_idCONTA`) REFERENCES `conta` (`idCONTA`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.contavinculada: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.contavinculada: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `contavinculada` DISABLE KEYS */;
 INSERT INTO `contavinculada` (`CLIENTE_idCLIENTE`, `CONTA_idCONTA`, `dataAbertura`) VALUES
 	(2, 3, '2023-01-05');
@@ -137,6 +137,17 @@ DROP VIEW IF EXISTS `v_totalfinanceiro`;
 CREATE TABLE `v_totalfinanceiro` (
 	`SUM(saldo)` DOUBLE(19,2) NULL
 ) ENGINE=MyISAM;
+
+-- Copiando estrutura para trigger agencia3si.tri_apagaVinculoConta
+DROP TRIGGER IF EXISTS `tri_apagaVinculoConta`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_apagaVinculoConta` BEFORE DELETE ON `conta` FOR EACH ROW BEGIN
+	DELETE FROM contavinculada
+	WHERE contavinculada.CONTA_idCONTA = OLD.idCONTA;
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 -- Copiando estrutura para trigger agencia3si.tri_FormataNomeCliente
 DROP TRIGGER IF EXISTS `tri_FormataNomeCliente`;
