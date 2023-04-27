@@ -27,16 +27,18 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
--- Copiando dados para a tabela agencia3si.auditoria: ~5 rows (aproximadamente)
+-- Copiando dados para a tabela agencia3si.auditoria: ~7 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
 INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
 	(1, 'Exclusão de conta do cliente: Afrânio Rosa', 'contavinculada', '2023-04-18 10:46:38', 'root@localhost'),
 	(2, 'CPF do Cliente: Afrânio Rosa foi alterado para 086.178.039-04. CPF antigo era: 777.777.777-77', 'cliente', '2023-04-19 08:08:30', 'root@localhost'),
 	(3, 'Código da conta: 5, Tipo de Conta: Corrente, Saldo inicial: R$2500.00', 'conta', '2023-04-19 08:19:54', 'root@localhost'),
 	(4, 'Exclusão de conta do cliente: ROBERTO SILVA', 'contavinculada', '2023-04-25 10:50:59', 'root@localhost'),
-	(5, 'Código da conta: 6, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-04-27 10:05:26', 'root@localhost');
+	(5, 'Código da conta: 6, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-04-27 10:05:26', 'root@localhost'),
+	(11, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 470.548.028-51. CPF antigo era: 820.548.028-51', 'cliente', '2023-04-27 10:51:32', 'root@localhost'),
+	(12, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 380.548.028-51. CPF antigo era: 470.548.028-51', 'cliente', '2023-04-27 10:51:48', 'root@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.cliente
@@ -67,7 +69,7 @@ INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `tele
 	(14, 'FERNANDO TELLES', '666.777.888-99', 'MG 10.214.957', '1979-03-19', '(35)3295-6666'),
 	(15, 'Claudio Alexandre', '192.360.997-20', NULL, '1954-11-30', NULL),
 	(16, 'MARIA FERNANDA', '892.692.486-20', NULL, '1999-05-14', NULL),
-	(17, 'ARYANE CASSIMIRO MACHADO', '820.548.028-51', NULL, '2003-09-03', NULL);
+	(17, 'ARYANE CASSIMIRO MACHADO', '380.548.028-51', NULL, '2003-09-03', NULL);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.conta
@@ -141,6 +143,22 @@ DROP VIEW IF EXISTS `v_totalfinanceiro`;
 CREATE TABLE `v_totalfinanceiro` (
 	`SUM(saldo)` DOUBLE(19,2) NULL
 ) ENGINE=MyISAM;
+
+-- Copiando estrutura para trigger agencia3si.tri_alteraDataAberturaConta
+DROP TRIGGER IF EXISTS `tri_alteraDataAberturaConta`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_alteraDataAberturaConta` AFTER UPDATE ON `cliente` FOR EACH ROW BEGIN	
+	IF(NEW.cpf != OLD.cpf) 
+	THEN
+		UPDATE contavinculada 
+		SET dataAbertura = NOW()
+		WHERE CLIENTE_idCliente = NEW.idCLIENTE;
+	END IF;
+		
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 -- Copiando estrutura para trigger agencia3si.tri_apagaVinculoConta
 DROP TRIGGER IF EXISTS `tri_apagaVinculoConta`;
