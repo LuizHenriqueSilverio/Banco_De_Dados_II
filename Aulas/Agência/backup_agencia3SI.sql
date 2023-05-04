@@ -175,13 +175,15 @@ DROP TRIGGER IF EXISTS `tri_atualizaSenhaSaldo`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `tri_atualizaSenhaSaldo` BEFORE UPDATE ON `conta` FOR EACH ROW BEGIN
-	IF(OLD.senha != NEW.senha)
+
+	IF(OLD.senha != NEW.senha AND NEW.senha != "")
 		THEN IF(NEW.tipo = "Poupança")
 			THEN
 			SET @saldoAntigo = OLD.saldo;
 			SET NEW.saldo = @saldoAntigo + 0.10;
 		END IF;
 	END IF;
+	
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
