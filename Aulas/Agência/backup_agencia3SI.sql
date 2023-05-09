@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
 -- Copiando dados para a tabela agencia3si.auditoria: ~7 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
@@ -38,7 +38,9 @@ INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`)
 	(4, 'Exclusão de conta do cliente: ROBERTO SILVA', 'contavinculada', '2023-04-25 10:50:59', 'root@localhost'),
 	(5, 'Código da conta: 6, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-04-27 10:05:26', 'root@localhost'),
 	(11, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 470.548.028-51. CPF antigo era: 820.548.028-51', 'cliente', '2023-04-27 10:51:32', 'root@localhost'),
-	(12, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 380.548.028-51. CPF antigo era: 470.548.028-51', 'cliente', '2023-04-27 10:51:48', 'root@localhost');
+	(12, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 380.548.028-51. CPF antigo era: 470.548.028-51', 'cliente', '2023-04-27 10:51:48', 'root@localhost'),
+	(13, 'Código da conta: 7, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-05-09 10:09:20', 'luiz@localhost'),
+	(14, 'Cliente inserido é menor de idade: RENATO MAGALHÃES', 'cliente', '2023-05-09 10:09:20', 'luiz@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.cliente
@@ -51,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `dataNascimento` date NOT NULL,
   `telefone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idCLIENTE`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- Copiando dados para a tabela agencia3si.cliente: ~13 rows (aproximadamente)
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
@@ -69,7 +71,8 @@ INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `tele
 	(14, 'FERNANDO TELLES', '666.777.888-99', 'MG 10.214.957', '1979-03-19', '(35)3295-6666'),
 	(15, 'Claudio Alexandre', '192.360.997-20', NULL, '1954-11-30', NULL),
 	(16, 'MARIA FERNANDA', '892.692.486-20', NULL, '1999-05-14', NULL),
-	(17, 'ARYANE CASSIMIRO MACHADO', '380.548.028-51', NULL, '2003-09-03', NULL);
+	(17, 'ARYANE CASSIMIRO MACHADO', '380.548.028-51', NULL, '2003-09-03', NULL),
+	(18, 'RENATO MAGALHÃES', '586.015.398-65', 'MG-23.896.456', '2008-05-09', NULL);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.conta
@@ -80,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `conta` (
   `saldo` float(10,2) NOT NULL DEFAULT 0.00,
   `senha` char(8) NOT NULL,
   PRIMARY KEY (`idCONTA`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- Copiando dados para a tabela agencia3si.conta: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `conta` DISABLE KEYS */;
@@ -89,7 +92,8 @@ INSERT INTO `conta` (`idCONTA`, `tipo`, `saldo`, `senha`) VALUES
 	(3, 'Poupança', 3322.10, 'senha123'),
 	(4, 'Corrente', 125.10, '*23ABC*'),
 	(5, 'Corrente', 2500.00, '081900PO'),
-	(6, 'Poupança', 0.01, 'abc');
+	(6, 'Poupança', 0.01, 'abc'),
+	(7, 'Poupança', 0.01, 'abc');
 /*!40000 ALTER TABLE `conta` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela agencia3si.contavinculada
@@ -108,7 +112,8 @@ CREATE TABLE IF NOT EXISTS `contavinculada` (
 -- Copiando dados para a tabela agencia3si.contavinculada: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `contavinculada` DISABLE KEYS */;
 INSERT INTO `contavinculada` (`CLIENTE_idCLIENTE`, `CONTA_idCONTA`, `dataAbertura`) VALUES
-	(17, 6, '2023-04-27');
+	(17, 6, '2023-04-27'),
+	(18, 7, '2023-05-09');
 /*!40000 ALTER TABLE `contavinculada` ENABLE KEYS */;
 
 -- Copiando estrutura para view agencia3si.v_agenda
@@ -272,6 +277,24 @@ BEGIN
 	INSERT INTO auditoria
 	VALUES(NULL, @mensagem, "conta", NOW(), USER());
 	
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Copiando estrutura para trigger agencia3si.tri_registraLogClientesMenores
+DROP TRIGGER IF EXISTS `tri_registraLogClientesMenores`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_registraLogClientesMenores` AFTER INSERT ON `cliente` FOR EACH ROW BEGIN
+	SELECT FLOOR(DATEDIFF(CURDATE(), dataNascimento) / 365)
+	INTO @idade FROM cliente WHERE idCliente = NEW.idCLIENTE;
+	
+	IF(@idade < 18)
+		THEN
+			SET @mensagem = CONCAT("Cliente inserido é menor de idade: ", NEW.nome);
+			INSERT INTO auditoria
+			VALUES(NULL, @mensagem, "cliente", NOW(),USER());
+	END IF;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
