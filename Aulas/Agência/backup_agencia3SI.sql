@@ -13,12 +13,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Copiando estrutura do banco de dados para agencia3si
-DROP DATABASE IF EXISTS `agencia3si`;
-CREATE DATABASE IF NOT EXISTS `agencia3si` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `agencia3si`;
+-- Copiando estrutura do banco de dados para lanchonete3si_2023
+DROP DATABASE IF EXISTS `lanchonete3si_2023`;
+CREATE DATABASE IF NOT EXISTS `lanchonete3si_2023` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `lanchonete3si_2023`;
 
--- Copiando estrutura para tabela agencia3si.auditoria
+-- Copiando estrutura para tabela lanchonete3si_2023.auditoria
 DROP TABLE IF EXISTS `auditoria`;
 CREATE TABLE IF NOT EXISTS `auditoria` (
   `idAuditoria` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,301 +27,188 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
--- Copiando dados para a tabela agencia3si.auditoria: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.auditoria: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
-INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
-	(1, 'Exclusão de conta do cliente: Afrânio Rosa', 'contavinculada', '2023-04-18 10:46:38', 'root@localhost'),
-	(2, 'CPF do Cliente: Afrânio Rosa foi alterado para 086.178.039-04. CPF antigo era: 777.777.777-77', 'cliente', '2023-04-19 08:08:30', 'root@localhost'),
-	(3, 'Código da conta: 5, Tipo de Conta: Corrente, Saldo inicial: R$2500.00', 'conta', '2023-04-19 08:19:54', 'root@localhost'),
-	(4, 'Exclusão de conta do cliente: ROBERTO SILVA', 'contavinculada', '2023-04-25 10:50:59', 'root@localhost'),
-	(5, 'Código da conta: 6, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-04-27 10:05:26', 'root@localhost'),
-	(11, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 470.548.028-51. CPF antigo era: 820.548.028-51', 'cliente', '2023-04-27 10:51:32', 'root@localhost'),
-	(12, 'CPF do Cliente: ARYANE CASSIMIRO MACHADO foi alterado para 380.548.028-51. CPF antigo era: 470.548.028-51', 'cliente', '2023-04-27 10:51:48', 'root@localhost'),
-	(13, 'Código da conta: 7, Tipo de Conta: Poupança, Saldo inicial: R$0.01', 'conta', '2023-05-09 10:09:20', 'luiz@localhost'),
-	(14, 'Cliente inserido é menor de idade: RENATO MAGALHÃES', 'cliente', '2023-05-09 10:09:20', 'luiz@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
--- Copiando estrutura para tabela agencia3si.cliente
+-- Copiando estrutura para tabela lanchonete3si_2023.categoria
+DROP TABLE IF EXISTS `categoria`;
+CREATE TABLE IF NOT EXISTS `categoria` (
+  `codCategoria` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  PRIMARY KEY (`codCategoria`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+-- Copiando dados para a tabela lanchonete3si_2023.categoria: ~8 rows (aproximadamente)
+/*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
+INSERT INTO `categoria` (`codCategoria`, `nome`) VALUES
+	(1, 'Salgados de fabricação própria'),
+	(2, 'Sucos Naturais'),
+	(3, 'Sucos industrializados'),
+	(4, 'Refrigerantes'),
+	(5, 'Bebidas quentes'),
+	(6, 'Sobremesas'),
+	(7, 'Ticket Alimentação');
+/*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
+
+-- Copiando estrutura para tabela lanchonete3si_2023.cliente
 DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
-  `idCLIENTE` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(150) NOT NULL,
-  `cpf` varchar(45) NOT NULL,
-  `rg` varchar(45) DEFAULT NULL,
-  `dataNascimento` date NOT NULL,
-  `telefone` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idCLIENTE`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  `codCliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(200) NOT NULL,
+  `endereco` varchar(100) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
+  `cidade` varchar(45) DEFAULT 'Machado',
+  `cep` varchar(20) DEFAULT '37.750-000',
+  `uf` char(2) DEFAULT 'MG',
+  `dataNascimento` date DEFAULT NULL,
+  `cpf` varchar(20) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`codCliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.cliente: ~13 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.cliente: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` (`idCLIENTE`, `nome`, `cpf`, `rg`, `dataNascimento`, `telefone`) VALUES
-	(1, 'TELMA ALMEIDA', '123.456.789-10', 'MG 999.999-99', '1980-11-25', '(35)4002-8922'),
-	(2, 'ROBERTO SILVA', '035.888.888-24', 'MG 10.100.777', '1975-05-21', '(35)3295-1234'),
-	(3, 'Amanda Carvalho', '123.456.789-10', NULL, '1980-06-23', NULL),
-	(4, 'Rogério Carvalho', '183.358.779-50', NULL, '1979-04-25', NULL),
-	(5, 'Lúcia Silviano', '444.036.444-77', NULL, '1989-01-15', NULL),
-	(6, 'Fabiana Silva', '999.999.999-99', NULL, '1970-12-02', NULL),
-	(7, 'José Reginaldo', '888.888.888-88', NULL, '1964-01-30', NULL),
-	(8, 'Afrânio Rosa', '086.178.039-04', NULL, '1958-06-12', NULL),
-	(12, 'FERNANDO TELLES', '444.555.666-77', 'MG 17.235.901', '1975-05-12', '(35)3295-1111'),
-	(13, 'ALESSANDRA SILVA TELLES', '555.666.777-88', 'MG 11.245.981', '1985-05-22', '(35)3002-4922'),
-	(14, 'FERNANDO TELLES', '666.777.888-99', 'MG 10.214.957', '1979-03-19', '(35)3295-6666'),
-	(15, 'Claudio Alexandre', '192.360.997-20', NULL, '1954-11-30', NULL),
-	(16, 'MARIA FERNANDA', '892.692.486-20', NULL, '1999-05-14', NULL),
-	(17, 'ARYANE CASSIMIRO MACHADO', '380.548.028-51', NULL, '2003-09-03', NULL),
-	(18, 'RENATO MAGALHÃES', '586.015.398-65', 'MG-23.896.456', '2008-05-09', NULL);
+INSERT INTO `cliente` (`codCliente`, `nome`, `endereco`, `bairro`, `cidade`, `cep`, `uf`, `dataNascimento`, `cpf`, `email`) VALUES
+	(1, 'Carlos Telles Silva', NULL, NULL, 'Machado', '37.750-000', 'MG', '1980-09-21', NULL, 'carlos2022@gmail.com'),
+	(2, 'Ana Paula Teixeira', NULL, NULL, 'Machado', '37.750-000', 'MG', '1985-11-04', NULL, 'teste@gmail.com'),
+	(3, 'João Victor Telles', NULL, NULL, 'Machado', '37.750-000', 'MG', '1974-04-29', NULL, NULL);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
--- Copiando estrutura para tabela agencia3si.conta
-DROP TABLE IF EXISTS `conta`;
-CREATE TABLE IF NOT EXISTS `conta` (
-  `idCONTA` int(11) NOT NULL AUTO_INCREMENT,
-  `tipo` enum('Salário','Corrente','Poupança') NOT NULL,
-  `saldo` float(10,2) NOT NULL DEFAULT 0.00,
-  `senha` char(8) NOT NULL,
-  PRIMARY KEY (`idCONTA`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-
--- Copiando dados para a tabela agencia3si.conta: ~4 rows (aproximadamente)
-/*!40000 ALTER TABLE `conta` DISABLE KEYS */;
-INSERT INTO `conta` (`idCONTA`, `tipo`, `saldo`, `senha`) VALUES
-	(2, 'Poupança', 275.10, 'teste'),
-	(3, 'Poupança', 3322.10, 'senha123'),
-	(4, 'Corrente', 125.10, '*23ABC*'),
-	(5, 'Corrente', 2500.00, '081900PO'),
-	(6, 'Poupança', 0.01, 'abc'),
-	(7, 'Poupança', 0.01, 'abc');
-/*!40000 ALTER TABLE `conta` ENABLE KEYS */;
-
--- Copiando estrutura para tabela agencia3si.contavinculada
-DROP TABLE IF EXISTS `contavinculada`;
-CREATE TABLE IF NOT EXISTS `contavinculada` (
-  `CLIENTE_idCLIENTE` int(11) NOT NULL,
-  `CONTA_idCONTA` int(11) NOT NULL,
-  `dataAbertura` date NOT NULL,
-  PRIMARY KEY (`CLIENTE_idCLIENTE`,`CONTA_idCONTA`),
-  KEY `fk_CLIENTE_has_CONTA_CONTA1_idx` (`CONTA_idCONTA`),
-  KEY `fk_CLIENTE_has_CONTA_CLIENTE_idx` (`CLIENTE_idCLIENTE`),
-  CONSTRAINT `FK_contavinculada_cliente` FOREIGN KEY (`CLIENTE_idCLIENTE`) REFERENCES `cliente` (`idCLIENTE`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_contavinculada_conta` FOREIGN KEY (`CONTA_idCONTA`) REFERENCES `conta` (`idCONTA`) ON DELETE NO ACTION ON UPDATE NO ACTION
+-- Copiando estrutura para tabela lanchonete3si_2023.itemvenda
+DROP TABLE IF EXISTS `itemvenda`;
+CREATE TABLE IF NOT EXISTS `itemvenda` (
+  `VENDA_codVenda` int(11) NOT NULL,
+  `PRODUTO_codProduto` int(11) NOT NULL,
+  `quantidade` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`VENDA_codVenda`,`PRODUTO_codProduto`),
+  KEY `fk_PRODUTO_has_VENDA_VENDA1_idx` (`VENDA_codVenda`),
+  KEY `fk_PRODUTO_has_VENDA_PRODUTO1_idx` (`PRODUTO_codProduto`),
+  CONSTRAINT `fk_PRODUTO_has_VENDA_PRODUTO1` FOREIGN KEY (`PRODUTO_codProduto`) REFERENCES `produto` (`codProduto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_PRODUTO_has_VENDA_VENDA1` FOREIGN KEY (`VENDA_codVenda`) REFERENCES `venda` (`codVenda`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela agencia3si.contavinculada: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `contavinculada` DISABLE KEYS */;
-INSERT INTO `contavinculada` (`CLIENTE_idCLIENTE`, `CONTA_idCONTA`, `dataAbertura`) VALUES
-	(17, 6, '2023-04-27'),
-	(18, 7, '2023-05-09');
-/*!40000 ALTER TABLE `contavinculada` ENABLE KEYS */;
+-- Copiando dados para a tabela lanchonete3si_2023.itemvenda: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `itemvenda` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itemvenda` ENABLE KEYS */;
 
--- Copiando estrutura para view agencia3si.v_agenda
-DROP VIEW IF EXISTS `v_agenda`;
+-- Copiando estrutura para tabela lanchonete3si_2023.marca
+DROP TABLE IF EXISTS `marca`;
+CREATE TABLE IF NOT EXISTS `marca` (
+  `codMarca` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  PRIMARY KEY (`codMarca`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- Copiando dados para a tabela lanchonete3si_2023.marca: ~5 rows (aproximadamente)
+/*!40000 ALTER TABLE `marca` DISABLE KEYS */;
+INSERT INTO `marca` (`codMarca`, `nome`) VALUES
+	(1, 'Nestlé'),
+	(2, 'Garoto'),
+	(4, 'Dolly'),
+	(5, 'Frutty'),
+	(6, 'Coetagri');
+/*!40000 ALTER TABLE `marca` ENABLE KEYS */;
+
+-- Copiando estrutura para tabela lanchonete3si_2023.produto
+DROP TABLE IF EXISTS `produto`;
+CREATE TABLE IF NOT EXISTS `produto` (
+  `codProduto` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(200) NOT NULL,
+  `precoCusto` decimal(10,2) NOT NULL,
+  `precoVenda` decimal(10,2) NOT NULL,
+  `margemLucro` decimal(5,2) DEFAULT NULL,
+  `dataValidade` date DEFAULT NULL,
+  `quantidadeEstoque` decimal(10,2) DEFAULT NULL,
+  `quantidadeMinima` decimal(10,2) DEFAULT NULL,
+  `CATEGORIA_codCategoria` int(11) NOT NULL,
+  `MARCA_codMarca` int(11) NOT NULL,
+  PRIMARY KEY (`codProduto`,`CATEGORIA_codCategoria`,`MARCA_codMarca`),
+  KEY `fk_PRODUTO_CATEGORIA_idx` (`CATEGORIA_codCategoria`),
+  KEY `fk_PRODUTO_MARCA1_idx` (`MARCA_codMarca`),
+  CONSTRAINT `fk_PRODUTO_CATEGORIA` FOREIGN KEY (`CATEGORIA_codCategoria`) REFERENCES `categoria` (`codCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_PRODUTO_MARCA1` FOREIGN KEY (`MARCA_codMarca`) REFERENCES `marca` (`codMarca`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- Copiando dados para a tabela lanchonete3si_2023.produto: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` (`codProduto`, `nome`, `precoCusto`, `precoVenda`, `margemLucro`, `dataValidade`, `quantidadeEstoque`, `quantidadeMinima`, `CATEGORIA_codCategoria`, `MARCA_codMarca`) VALUES
+	(1, 'Empada de Palmito', 1.80, 3.60, 100.00, '2022-11-20', 30.00, 10.00, 1, 6),
+	(2, 'Prestígio', 2.00, 3.00, NULL, '2023-12-11', 50.00, 15.00, 6, 1),
+	(3, 'Guaraná 600mL', 2.00, 3.00, NULL, '2023-05-21', 45.00, 20.00, 4, 5);
+/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
+
+-- Copiando estrutura para tabela lanchonete3si_2023.venda
+DROP TABLE IF EXISTS `venda`;
+CREATE TABLE IF NOT EXISTS `venda` (
+  `codVenda` int(11) NOT NULL AUTO_INCREMENT,
+  `dataHora` datetime NOT NULL,
+  `desconto` decimal(5,2) DEFAULT NULL,
+  `tipoVenda` enum('À vista','Cartão Débito','Cartão Crédito','PIX') NOT NULL,
+  `CLIENTE_codCliente` int(11) NOT NULL,
+  PRIMARY KEY (`codVenda`,`CLIENTE_codCliente`),
+  KEY `fk_VENDA_CLIENTE1_idx` (`CLIENTE_codCliente`),
+  CONSTRAINT `fk_VENDA_CLIENTE1` FOREIGN KEY (`CLIENTE_codCliente`) REFERENCES `cliente` (`codCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- Copiando dados para a tabela lanchonete3si_2023.venda: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `venda` DISABLE KEYS */;
+INSERT INTO `venda` (`codVenda`, `dataHora`, `desconto`, `tipoVenda`, `CLIENTE_codCliente`) VALUES
+	(1, '2022-12-08 07:09:00', 6.00, 'À vista', 3),
+	(2, '2023-05-11 10:14:35', NULL, 'PIX', 1);
+/*!40000 ALTER TABLE `venda` ENABLE KEYS */;
+
+-- Copiando estrutura para view lanchonete3si_2023.v_nascimentoclientes
+DROP VIEW IF EXISTS `v_nascimentoclientes`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
-CREATE TABLE `v_agenda` (
-	`idCliente` INT(11) NOT NULL,
-	`nome` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
-	`telefone` VARCHAR(45) NULL COLLATE 'utf8_general_ci'
+CREATE TABLE `v_nascimentoclientes` (
+	`Nome` VARCHAR(200) NOT NULL COLLATE 'utf8_general_ci',
+	`Data de Nascimento` VARCHAR(10) NULL COLLATE 'utf8mb4_general_ci'
 ) ENGINE=MyISAM;
 
--- Copiando estrutura para view agencia3si.v_clientesordemcrescente
-DROP VIEW IF EXISTS `v_clientesordemcrescente`;
--- Criando tabela temporária para evitar erros de dependência de VIEW
-CREATE TABLE `v_clientesordemcrescente` (
-	`nome` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
-	`cpf` VARCHAR(45) NOT NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- Copiando estrutura para view agencia3si.v_contasclientes
-DROP VIEW IF EXISTS `v_contasclientes`;
--- Criando tabela temporária para evitar erros de dependência de VIEW
-CREATE TABLE `v_contasclientes` (
-	`nome` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
-	`tipo` ENUM('Salário','Corrente','Poupança') NOT NULL COLLATE 'utf8_general_ci',
-	`saldo` FLOAT(10,2) NOT NULL
-) ENGINE=MyISAM;
-
--- Copiando estrutura para view agencia3si.v_totalfinanceiro
-DROP VIEW IF EXISTS `v_totalfinanceiro`;
--- Criando tabela temporária para evitar erros de dependência de VIEW
-CREATE TABLE `v_totalfinanceiro` (
-	`SUM(saldo)` DOUBLE(19,2) NULL
-) ENGINE=MyISAM;
-
--- Copiando estrutura para trigger agencia3si.tri_alteraDataAberturaConta
-DROP TRIGGER IF EXISTS `tri_alteraDataAberturaConta`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_alteraEmailCliente
+DROP PROCEDURE IF EXISTS `proc_alteraEmailCliente`;
 DELIMITER //
-CREATE TRIGGER `tri_alteraDataAberturaConta` AFTER UPDATE ON `cliente` FOR EACH ROW BEGIN	
-	IF(NEW.cpf != OLD.cpf) 
-	THEN
-		UPDATE contavinculada 
-		SET dataAbertura = NOW()
-		WHERE CLIENTE_idCliente = NEW.idCLIENTE;
-	END IF;
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_apagaVinculoConta
-DROP TRIGGER IF EXISTS `tri_apagaVinculoConta`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_alteraMarca
+DROP PROCEDURE IF EXISTS `proc_alteraMarca`;
 DELIMITER //
-CREATE TRIGGER `tri_apagaVinculoConta` BEFORE DELETE ON `conta` FOR EACH ROW BEGIN
-	DELETE FROM contavinculada
-	WHERE contavinculada.CONTA_idCONTA = OLD.idCONTA;
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_atualizaSenhaSaldo
-DROP TRIGGER IF EXISTS `tri_atualizaSenhaSaldo`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_apagaMarca
+DROP PROCEDURE IF EXISTS `proc_apagaMarca`;
 DELIMITER //
-CREATE TRIGGER `tri_atualizaSenhaSaldo` BEFORE UPDATE ON `conta` FOR EACH ROW BEGIN
-
-	IF(OLD.senha != NEW.senha AND NEW.senha != "")
-		THEN IF(NEW.tipo = "Poupança")
-			THEN
-			SET @saldoAntigo = OLD.saldo;
-			SET NEW.saldo = @saldoAntigo + 0.10;
-		END IF;
-	END IF;
-	
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_FormataNomeCliente
-DROP TRIGGER IF EXISTS `tri_FormataNomeCliente`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_insereCategoria
+DROP PROCEDURE IF EXISTS `proc_insereCategoria`;
 DELIMITER //
-CREATE TRIGGER `tri_FormataNomeCliente` BEFORE INSERT ON `cliente` FOR EACH ROW BEGIN
-	SET NEW.nome = TRIM(UPPER(NEW.nome));
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_insereClientePoupanca
-DROP TRIGGER IF EXISTS `tri_insereClientePoupanca`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_insereCliente
+DROP PROCEDURE IF EXISTS `proc_insereCliente`;
 DELIMITER //
-CREATE TRIGGER `tri_insereClientePoupanca` AFTER INSERT ON `cliente` FOR EACH ROW BEGIN
-	INSERT INTO conta
-	VALUES(NULL, "Poupança", 0.01, "abc");
-	
-	SET @novoCliente = (SELECT idCliente FROM cliente ORDER BY idCliente DESC LIMIT 1);
-	SET @novaConta = (SELECT idConta FROM conta ORDER BY idConta DESC LIMIT 1);
-	
-	INSERT INTO contavinculada
-	VALUES
-	(
-		@novoCliente, 
-		@novaConta, 
-		NOW()
-	);
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_LogApagaContaVinculada
-DROP TRIGGER IF EXISTS `tri_LogApagaContaVinculada`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_insereMarca
+DROP PROCEDURE IF EXISTS `proc_insereMarca`;
 DELIMITER //
-CREATE TRIGGER tri_LogApagaContaVinculada
-AFTER DELETE
-ON contavinculada
-FOR EACH ROW
-BEGIN
-
-	SELECT nome INTO @nomeCliente FROM cliente
-	WHERE idCliente = OLD.CLIENTE_idCliente;
-	
-	SET @mensagem = CONCAT("Exclusão de conta do cliente: ", @nomeCliente);
-
-	INSERT INTO auditoria 
-	VALUES(NULL, @mensagem, "contavinculada", NOW(), USER());
-END//
+//
 DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para trigger agencia3si.tri_LogFiscalizaCPF
-DROP TRIGGER IF EXISTS `tri_LogFiscalizaCPF`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
-DELIMITER //
-CREATE TRIGGER tri_LogFiscalizaCPF 
-AFTER UPDATE ON cliente
-FOR EACH ROW
-BEGIN
-	
-	SET @mensagem = CONCAT("CPF do Cliente: ", NEW.nome, " foi alterado para ", NEW.cpf, ". CPF antigo era: ", OLD.cpf);
-	INSERT INTO auditoria
-	VALUES(NULL, @mensagem, "cliente", NOW(), USER());
-	
-END//
-DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
-
--- Copiando estrutura para trigger agencia3si.tri_LogInsereConta
-DROP TRIGGER IF EXISTS `tri_LogInsereConta`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
-DELIMITER //
-CREATE TRIGGER tri_LogInsereConta
-AFTER INSERT ON conta
-FOR EACH ROW
-BEGIN
-	
-	SET @mensagem = CONCAT("Código da conta: ", NEW.idConta, ", Tipo de Conta: ", NEW.tipo
-	, ", Saldo inicial: R$", NEW.saldo);
-	INSERT INTO auditoria
-	VALUES(NULL, @mensagem, "conta", NOW(), USER());
-	
-END//
-DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
-
--- Copiando estrutura para trigger agencia3si.tri_registraLogClientesMenores
-DROP TRIGGER IF EXISTS `tri_registraLogClientesMenores`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
-DELIMITER //
-CREATE TRIGGER `tri_registraLogClientesMenores` AFTER INSERT ON `cliente` FOR EACH ROW BEGIN
-	SELECT FLOOR(DATEDIFF(CURDATE(), dataNascimento) / 365)
-	INTO @idade FROM cliente WHERE idCliente = NEW.idCLIENTE;
-	
-	IF(@idade < 18)
-		THEN
-			SET @mensagem = CONCAT("Cliente inserido é menor de idade: ", NEW.nome);
-			INSERT INTO auditoria
-			VALUES(NULL, @mensagem, "cliente", NOW(),USER());
-	END IF;
-END//
-DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
-
--- Copiando estrutura para view agencia3si.v_agenda
-DROP VIEW IF EXISTS `v_agenda`;
+-- Copiando estrutura para view lanchonete3si_2023.v_nascimentoclientes
+DROP VIEW IF EXISTS `v_nascimentoclientes`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
-DROP TABLE IF EXISTS `v_agenda`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_agenda` AS (select `cli`.`idCLIENTE` AS `idCliente`,`cli`.`nome` AS `nome`,`cli`.`telefone` AS `telefone` from `cliente` `cli` where `cli`.`telefone` is not null);
-
--- Copiando estrutura para view agencia3si.v_clientesordemcrescente
-DROP VIEW IF EXISTS `v_clientesordemcrescente`;
--- Removendo tabela temporária e criando a estrutura VIEW final
-DROP TABLE IF EXISTS `v_clientesordemcrescente`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientesordemcrescente` AS (select `cliente`.`nome` AS `nome`,`cliente`.`cpf` AS `cpf` from `cliente` order by `cliente`.`nome`);
-
--- Copiando estrutura para view agencia3si.v_contasclientes
-DROP VIEW IF EXISTS `v_contasclientes`;
--- Removendo tabela temporária e criando a estrutura VIEW final
-DROP TABLE IF EXISTS `v_contasclientes`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_contasclientes` AS select `cli`.`nome` AS `nome`,`con`.`tipo` AS `tipo`,`con`.`saldo` AS `saldo` from ((`cliente` `cli` join `conta` `con`) join `contavinculada` `cv` on(`cli`.`idCLIENTE` = `cv`.`CLIENTE_idCLIENTE` and `con`.`idCONTA` = `cv`.`CONTA_idCONTA`));
-
--- Copiando estrutura para view agencia3si.v_totalfinanceiro
-DROP VIEW IF EXISTS `v_totalfinanceiro`;
--- Removendo tabela temporária e criando a estrutura VIEW final
-DROP TABLE IF EXISTS `v_totalfinanceiro`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_totalfinanceiro` AS (select sum(`conta`.`saldo`) AS `SUM(saldo)` from `conta`);
+DROP TABLE IF EXISTS `v_nascimentoclientes`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_nascimentoclientes` AS (select `cliente`.`nome` AS `Nome`,date_format(`cliente`.`dataNascimento`,'%d/%m/%Y') AS `Data de Nascimento` from `cliente`);
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
