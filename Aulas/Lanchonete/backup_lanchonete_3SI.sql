@@ -227,6 +227,29 @@ END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
+-- Copiando estrutura para trigger lanchonete3si_2023.tri_devolveEstoque
+DROP TRIGGER IF EXISTS `tri_devolveEstoque`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_devolveEstoque` AFTER DELETE ON `itemvenda` FOR EACH ROW BEGIN
+	UPDATE produto 
+	SET produto.quantidadeEstoque = produto.quantidadeEstoque + OLD.quantidade
+	WHERE produto.codProduto = OLD.PRODUTO_codProduto;
+	
+	SELECT nome INTO @nomeProd 
+	FROM produto
+	WHERE codProduto = OLD.PRODUTO_codProduto;
+	
+	SET @mensagem =
+	CONCAT("Produto devolvido = ", @nomeProd, ", Quantidade = ", OLD.quantidade,
+	", pela venda = ", OLD.VENDA_codVenda);
+	
+	INSERT INTO auditoria
+	VALUES(NULL, @mensagem, "itemvenda", NOW(), USER());
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 -- Copiando estrutura para view lanchonete3si_2023.v_nascimentoclientes
 DROP VIEW IF EXISTS `v_nascimentoclientes`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
