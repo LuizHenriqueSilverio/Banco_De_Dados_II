@@ -212,6 +212,17 @@ CREATE TRIGGER `tri_baixaEstoque` BEFORE INSERT ON `itemvenda` FOR EACH ROW BEGI
 	UPDATE produto 
 	SET produto.quantidadeEstoque = produto.quantidadeEstoque - NEW.quantidade
 	WHERE produto.codProduto = NEW.PRODUTO_codProduto;
+	
+	SELECT nome INTO @nomeProd 
+	FROM produto
+	WHERE codProduto = NEW.PRODUTO_codProduto;
+	
+	SET @mensagem =
+	CONCAT("Produto vendido = ", @nomeProd, ", Quantidade = ", NEW.quantidade,
+	", para a venda = ", NEW.VENDA_codVenda);
+	
+	INSERT INTO auditoria
+	VALUES(NULL, @mensagem, "itemvenda", NOW(), USER());
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
