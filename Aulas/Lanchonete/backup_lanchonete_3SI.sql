@@ -27,10 +27,13 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
--- Copiando dados para a tabela lanchonete3si_2023.auditoria: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.auditoria: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
+INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
+	(1, 'Produto vendido = Empada de Palmito, Quantidade = 5, para a venda = 2', 'itemvenda', '2023-05-16 09:55:15', 'luiz@localhost'),
+	(2, 'Produto devolvido = Empada de Palmito, Quantidade = 5, pela venda = 2', 'itemvenda', '2023-05-16 10:02:13', 'luiz@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela lanchonete3si_2023.categoria
@@ -41,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   PRIMARY KEY (`codCategoria`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.categoria: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.categoria: ~8 rows (aproximadamente)
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`codCategoria`, `nome`) VALUES
 	(1, 'Salgados de fabricação própria'),
@@ -153,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `venda` (
   CONSTRAINT `fk_VENDA_CLIENTE1` FOREIGN KEY (`CLIENTE_codCliente`) REFERENCES `cliente` (`codCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.venda: ~1 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.venda: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
 INSERT INTO `venda` (`codVenda`, `dataHora`, `desconto`, `tipoVenda`, `CLIENTE_codCliente`) VALUES
 	(1, '2022-12-08 07:09:00', 6.00, 'À vista', 3),
@@ -203,6 +206,29 @@ DROP PROCEDURE IF EXISTS `proc_insereMarca`;
 DELIMITER //
 //
 DELIMITER ;
+
+-- Copiando estrutura para trigger lanchonete3si_2023.tri_atualizaEstoque
+DROP TRIGGER IF EXISTS `tri_atualizaEstoque`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_atualizaEstoque` AFTER UPDATE ON `itemvenda` FOR EACH ROW BEGIN
+
+IF (NEW.quantidade > OLD.quantidade)
+	THEN
+		UPDATE produto
+		SET quantidadeEstoque = quantidadeEstoque - (NEW.quantidade - OLD.quantidade)
+		WHERE codProduto = NEW.PRODUTO_codProduto;
+	ELSE IF (NEW.quantidade < OLD.quantidade)
+		THEN
+			UPDATE produto
+			SET quantidadeEstoque = quantidadeEstoque + (OLD.quantidade - NEW.quantidade)
+			WHERE codProduto = NEW.PRODUTO_codProduto;
+	END IF;
+END IF;
+	
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 -- Copiando estrutura para trigger lanchonete3si_2023.tri_baixaEstoque
 DROP TRIGGER IF EXISTS `tri_baixaEstoque`;
