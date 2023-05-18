@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   PRIMARY KEY (`codCategoria`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.categoria: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.categoria: ~8 rows (aproximadamente)
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`codCategoria`, `nome`) VALUES
 	(1, 'Salgados de fabricação própria'),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `marca` (
   PRIMARY KEY (`codMarca`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.marca: ~6 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.marca: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `marca` DISABLE KEYS */;
 INSERT INTO `marca` (`codMarca`, `nome`) VALUES
 	(1, 'Nestlé'),
@@ -134,15 +134,16 @@ CREATE TABLE IF NOT EXISTS `produto` (
   KEY `fk_PRODUTO_MARCA1_idx` (`MARCA_codMarca`),
   CONSTRAINT `fk_PRODUTO_CATEGORIA` FOREIGN KEY (`CATEGORIA_codCategoria`) REFERENCES `categoria` (`codCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_PRODUTO_MARCA1` FOREIGN KEY (`MARCA_codMarca`) REFERENCES `marca` (`codMarca`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.produto: ~4 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.produto: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
 INSERT INTO `produto` (`codProduto`, `nome`, `precoCusto`, `precoVenda`, `margemLucro`, `dataValidade`, `quantidadeEstoque`, `quantidadeMinima`, `CATEGORIA_codCategoria`, `MARCA_codMarca`) VALUES
-	(1, 'Empada de Palmito', 1.80, 3.60, 100.00, '2022-11-20', 30.00, 10.00, 1, 6),
+	(1, 'Empada de Palmito', 1.80, 3.60, 80.00, '2022-11-20', 30.00, 10.00, 1, 6),
 	(2, 'Prestígio', 2.00, 3.50, 75.00, '2023-12-11', 50.00, 15.00, 6, 7),
 	(3, 'Guaraná 600mL', 2.00, 3.00, NULL, '2023-05-21', 45.00, 20.00, 4, 5),
-	(4, 'Coca-Cola 600mL', 2.00, 4.00, 100.00, '2024-05-16', 50.00, 20.00, 4, 6);
+	(4, 'Coca-Cola 600mL', 2.00, 4.00, 100.00, '2024-05-16', 50.00, 20.00, 4, 7),
+	(6, 'Hambúrguer', 4.00, 8.50, NULL, '2023-05-18', 50.00, 10.00, 1, 6);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela lanchonete3si_2023.venda
@@ -158,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `venda` (
   CONSTRAINT `fk_VENDA_CLIENTE1` FOREIGN KEY (`CLIENTE_codCliente`) REFERENCES `cliente` (`codCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.venda: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.venda: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
 INSERT INTO `venda` (`codVenda`, `dataHora`, `desconto`, `tipoVenda`, `CLIENTE_codCliente`) VALUES
 	(1, '2022-12-08 07:09:00', 6.00, 'À vista', 3),
@@ -193,11 +194,17 @@ CREATE PROCEDURE `proc_alteraMargemLucro`(
 	IN `novaMargemLucro` DECIMAL(5,2)
 )
 BEGIN
+	SELECT COUNT(*) INTO @contador FROM produto WHERE codProduto = codAlterado;
+	IF(@contador = 0)
+		THEN
+			SELECT "Produto não encontrado!" AS erro;
+	ELSE
 	IF(novaMargemLucro > 0)
 		THEN
 			UPDATE produto 
 			SET margemLucro = novaMargemLucro
 			WHERE codProduto = codAlterado;
+	END IF;
 	END IF;
 END//
 DELIMITER ;
@@ -262,21 +269,6 @@ IF (NEW.quantidade > OLD.quantidade)
 	END IF;
 END IF;
 	
-END//
-DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
-
--- Copiando estrutura para trigger lanchonete3si_2023.tri_atualizaMargemLucro
-DROP TRIGGER IF EXISTS `tri_atualizaMargemLucro`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
-DELIMITER //
-CREATE TRIGGER `tri_atualizaMargemLucro` BEFORE UPDATE ON `produto` FOR EACH ROW BEGIN
-
-IF (NEW.margemLucro != OLD.margemLucro)
-	THEN
-		SET NEW.precoVenda = NEW.precoCusto + (NEW.precoCusto * (NEW.margemLucro / 100));
-END IF;
-
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
