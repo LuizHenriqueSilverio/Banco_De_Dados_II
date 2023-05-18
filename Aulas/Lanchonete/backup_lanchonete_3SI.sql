@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   PRIMARY KEY (`codCategoria`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.categoria: ~8 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.categoria: ~7 rows (aproximadamente)
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`codCategoria`, `nome`) VALUES
 	(1, 'Salgados de fabricação própria'),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `marca` (
   PRIMARY KEY (`codMarca`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.marca: ~5 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.marca: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `marca` DISABLE KEYS */;
 INSERT INTO `marca` (`codMarca`, `nome`) VALUES
 	(1, 'Nestlé'),
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `produto` (
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
 INSERT INTO `produto` (`codProduto`, `nome`, `precoCusto`, `precoVenda`, `margemLucro`, `dataValidade`, `quantidadeEstoque`, `quantidadeMinima`, `CATEGORIA_codCategoria`, `MARCA_codMarca`) VALUES
 	(1, 'Empada de Palmito', 1.80, 3.60, 100.00, '2022-11-20', 30.00, 10.00, 1, 6),
-	(2, 'Prestígio', 2.00, 3.00, NULL, '2023-12-11', 50.00, 15.00, 6, 7),
+	(2, 'Prestígio', 2.00, 3.50, 75.00, '2023-12-11', 50.00, 15.00, 6, 7),
 	(3, 'Guaraná 600mL', 2.00, 3.00, NULL, '2023-05-21', 45.00, 20.00, 4, 5),
 	(4, 'Coca-Cola 600mL', 2.00, 4.00, 100.00, '2024-05-16', 50.00, 20.00, 4, 6);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `venda` (
   CONSTRAINT `fk_VENDA_CLIENTE1` FOREIGN KEY (`CLIENTE_codCliente`) REFERENCES `cliente` (`codCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.venda: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.venda: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
 INSERT INTO `venda` (`codVenda`, `dataHora`, `desconto`, `tipoVenda`, `CLIENTE_codCliente`) VALUES
 	(1, '2022-12-08 07:09:00', 6.00, 'À vista', 3),
