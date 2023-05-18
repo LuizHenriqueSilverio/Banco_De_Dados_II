@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `produto` (
   KEY `fk_PRODUTO_MARCA1_idx` (`MARCA_codMarca`),
   CONSTRAINT `fk_PRODUTO_CATEGORIA` FOREIGN KEY (`CATEGORIA_codCategoria`) REFERENCES `categoria` (`codCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_PRODUTO_MARCA1` FOREIGN KEY (`MARCA_codMarca`) REFERENCES `marca` (`codMarca`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- Copiando dados para a tabela lanchonete3si_2023.produto: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
@@ -221,7 +221,7 @@ CREATE PROCEDURE `proc_insereProduto`(
 )
 BEGIN
 	INSERT INTO produto(nome, precoCusto, precoVenda, categoria_codCategoria, marca_codMarca)
-	VALUES( nomeInserir, precoCustoInserir, precoVendaInserir, categoriaInserir, marcaInserir);
+	VALUES(nomeInserir, precoCustoInserir, precoVendaInserir, categoriaInserir, marcaInserir);
 		
 END//
 DELIMITER ;
