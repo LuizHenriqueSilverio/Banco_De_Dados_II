@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   PRIMARY KEY (`codCategoria`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.categoria: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.categoria: ~8 rows (aproximadamente)
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`codCategoria`, `nome`) VALUES
 	(1, 'Salgados de fabricação própria'),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `marca` (
   PRIMARY KEY (`codMarca`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.marca: ~6 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.marca: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `marca` DISABLE KEYS */;
 INSERT INTO `marca` (`codMarca`, `nome`) VALUES
 	(1, 'Nestlé'),
@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `venda` (
   CONSTRAINT `fk_VENDA_CLIENTE1` FOREIGN KEY (`CLIENTE_codCliente`) REFERENCES `cliente` (`codCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.venda: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.venda: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
 INSERT INTO `venda` (`codVenda`, `dataHora`, `desconto`, `tipoVenda`, `CLIENTE_codCliente`) VALUES
 	(1, '2022-12-08 07:09:00', 6.00, 'À vista', 3),
@@ -207,6 +207,23 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS `proc_insereMarca`;
 DELIMITER //
 //
+DELIMITER ;
+
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_insereProduto
+DROP PROCEDURE IF EXISTS `proc_insereProduto`;
+DELIMITER //
+CREATE PROCEDURE `proc_insereProduto`(
+	IN `nomeInserir` VARCHAR(200),
+	IN `precoCustoInserir` DECIMAL(10,2),
+	IN `precoVendaInserir` DECIMAL(10,2),
+	IN `categoriaInserir` INT,
+	IN `marcaInserir` INT
+)
+BEGIN
+	INSERT INTO produto(nome, precoCusto, precoVenda, categoria_codCategoria, marca_codMarca)
+	VALUES( nomeInserir, precoCustoInserir, precoVendaInserir, categoriaInserir, marcaInserir);
+		
+END//
 DELIMITER ;
 
 -- Copiando estrutura para trigger lanchonete3si_2023.tri_atualizaEstoque
