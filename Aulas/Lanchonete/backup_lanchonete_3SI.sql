@@ -185,6 +185,23 @@ DELIMITER //
 //
 DELIMITER ;
 
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_alteraMargemLucro
+DROP PROCEDURE IF EXISTS `proc_alteraMargemLucro`;
+DELIMITER //
+CREATE PROCEDURE `proc_alteraMargemLucro`(
+	IN `codAlterado` INT,
+	IN `novaMargemLucro` DECIMAL(5,2)
+)
+BEGIN
+	IF(novaMargemLucro > 0)
+		THEN
+			UPDATE produto 
+			SET margemLucro = novaMargemLucro
+			WHERE codProduto = codAlterado;
+	END IF;
+END//
+DELIMITER ;
+
 -- Copiando estrutura para procedure lanchonete3si_2023.proc_apagaMarca
 DROP PROCEDURE IF EXISTS `proc_apagaMarca`;
 DELIMITER //
