@@ -27,13 +27,14 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
 
 -- Copiando dados para a tabela lanchonete3si_2023.auditoria: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
 INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
 	(1, 'Produto vendido = Empada de Palmito, Quantidade = 5, para a venda = 2', 'itemvenda', '2023-05-16 09:55:15', 'luiz@localhost'),
-	(2, 'Produto devolvido = Empada de Palmito, Quantidade = 5, pela venda = 2', 'itemvenda', '2023-05-16 10:02:13', 'luiz@localhost');
+	(2, 'Produto devolvido = Empada de Palmito, Quantidade = 5, pela venda = 2', 'itemvenda', '2023-05-16 10:02:13', 'luiz@localhost'),
+	(3, 'Produto excluido = 6', 'produto', '2023-05-23 10:31:13', 'luiz@localhost');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela lanchonete3si_2023.categoria
@@ -139,11 +140,10 @@ CREATE TABLE IF NOT EXISTS `produto` (
 -- Copiando dados para a tabela lanchonete3si_2023.produto: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
 INSERT INTO `produto` (`codProduto`, `nome`, `precoCusto`, `precoVenda`, `margemLucro`, `dataValidade`, `quantidadeEstoque`, `quantidadeMinima`, `CATEGORIA_codCategoria`, `MARCA_codMarca`) VALUES
-	(1, 'Empada de Palmito', 1.80, 3.60, 80.00, '2022-11-20', 30.00, 10.00, 1, 6),
+	(1, 'Empada de Palmito', 1.80, 3.60, 100.00, '2022-11-20', 30.00, 10.00, 1, 6),
 	(2, 'Prestígio', 2.00, 3.50, 75.00, '2023-12-11', 50.00, 15.00, 6, 7),
 	(3, 'Guaraná 600mL', 2.00, 3.00, NULL, '2023-05-21', 45.00, 20.00, 4, 5),
-	(4, 'Coca-Cola 600mL', 2.00, 4.00, 100.00, '2024-05-16', 50.00, 20.00, 4, 7),
-	(6, 'Hambúrguer', 4.00, 8.50, NULL, '2023-05-18', 50.00, 10.00, 1, 6);
+	(4, 'Coca-Cola 600mL', 2.00, 4.00, 100.00, '2024-05-16', 50.00, 20.00, 4, 7);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela lanchonete3si_2023.venda
@@ -213,6 +213,28 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS `proc_apagaMarca`;
 DELIMITER //
 //
+DELIMITER ;
+
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_apagaProduto
+DROP PROCEDURE IF EXISTS `proc_apagaProduto`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaProduto`(
+	IN `codApagar` INT
+)
+BEGIN
+
+	SELECT COUNT(*) INTO @contador FROM produto
+	WHERE codProduto = codApagar;
+
+	IF(@contador = 0)
+		THEN
+		SELECT "Produto não encontrado!" AS erro;
+	ELSE
+		DELETE FROM produto WHERE codProduto = codApagar;
+		SET @mensagem = CONCAT("Produto excluido = ", codApagar);
+		INSERT INTO auditoria VALUES(NULL, @mensagem, "produto", NOW(), USER());
+	END IF;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure lanchonete3si_2023.proc_insereCategoria
