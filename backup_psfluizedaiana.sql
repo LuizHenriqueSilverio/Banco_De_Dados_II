@@ -167,121 +167,360 @@ CREATE TABLE `v_consultas` (
 -- Copiando estrutura para procedure psf_luizedaiana.proc_alteraConsulta
 DROP PROCEDURE IF EXISTS `proc_alteraConsulta`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_alteraConsulta`(IN codCons INT, IN dataHora DATETIME, IN motivo VARCHAR(200),  IN Pacientes_codPacientes INT, IN Medicos_codMedicos INT)
+BEGIN
+	UPDATE `psf_luizedaiana`.`consultas`
+	SET
+	`dataHora` = dataHora,
+	`motivo` = motivo,
+	`MEDICOS_codMEDICOS` = Medicos_codMedicos,
+	`PACIENTES_codPACIENTES` = Pacientes_codPacientes
+	WHERE `codCONSULTA` = codCons;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_alteraMedico
 DROP PROCEDURE IF EXISTS `proc_alteraMedico`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_alteraMedico`(
+	IN `nome` VARCHAR(100),
+	IN `crm` VARCHAR(45),
+	IN `espMed` VARCHAR(200),
+	IN `cod` INT
+)
+BEGIN
+
+SELECT COUNT(*) INTO @contador 
+FROM medicos AS M
+WHERE M.codMEDICOS = cod;
+
+IF (@contador = 0)
+	THEN
+		SELECT "Médico não cadastrado!" AS erro;
+	ELSE
+		UPDATE `psf_luizedaiana`.`medicos`
+ 		SET
+			`nome` = nome,
+			`crm` = crm,
+        	`especialidade` = espMed
+		WHERE `codMEDICOS` = cod;
+END IF;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_alteraPaciente
 DROP PROCEDURE IF EXISTS `proc_alteraPaciente`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_alteraPaciente`(IN cpf VARCHAR(100), IN nome VARCHAR(200), IN telefone VARCHAR(45), IN endereco VARCHAR(200))
+BEGIN
+	UPDATE `psf_luizedaiana`.`pacientes`
+	SET
+		`cpf` = cpf,
+		`nome` = nome,
+		`telefone` = telefone,
+		`endereco` = endereco
+	WHERE `codPACIENTES` = cod;
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_alteraReceita
 DROP PROCEDURE IF EXISTS `proc_alteraReceita`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_alteraReceita`(IN meds VARCHAR(100), IN posologia VARCHAR(200), IN codConsulta INT, IN codMed INT, IN codPac INT, IN codRec INT)
+BEGIN
+	UPDATE `psf_luizedaiana`.`receitas`
+	SET
+	`medicamentos` = meds,
+	`posologia` = posologia,
+	`consultas_codCONSULTA` = codConsulta,
+	`consultas_MEDICOS_codMEDICOS` = codMed,
+	`consultas_PACIENTES_codPACIENTES` = codPac
+	WHERE `codRECEITA` = codRec;
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_consultaLogin
 DROP PROCEDURE IF EXISTS `proc_consultaLogin`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_consultaLogin`(IN usuario VARCHAR(100), IN senha VARCHAR(100))
+BEGIN
+	SELECT * FROM USUARIOS 
+    WHERE USUARIOS.nome = usuario
+    AND USUARIOS.senha = senha;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_deletaConsulta
 DROP PROCEDURE IF EXISTS `proc_deletaConsulta`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_deletaConsulta`(IN codCons INT)
+BEGIN
+	DELETE FROM `psf_luizedaiana`.`consultas`
+	WHERE `codCONSULTA` = codCons;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_deletaMedico
 DROP PROCEDURE IF EXISTS `proc_deletaMedico`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_deletaMedico`(
+	IN `codMed` INT
+)
+BEGIN
+
+SELECT COUNT(*) INTO @contador 
+FROM medicos AS M
+WHERE M.codMEDICOS = codMed;
+
+IF (@contador = 0)
+	THEN
+		SELECT "Médico não cadastrado!" AS erro;
+	ELSE
+	DELETE FROM `psf_luizedaiana`.`medicos`
+	WHERE codMedicos = codMed;
+END IF;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_deletaPaciente
 DROP PROCEDURE IF EXISTS `proc_deletaPaciente`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_deletaPaciente`(IN codPac INT)
+BEGIN
+	DELETE FROM `psf_luizedaiana`.`pacientes`
+	WHERE codPacientes = codPac;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_deletaReceita
 DROP PROCEDURE IF EXISTS `proc_deletaReceita`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_deletaReceita`(IN codRec INT)
+BEGIN
+	DELETE FROM `psf_luizedaiana`.`receitas`
+	WHERE `codRECEITA` = codRec;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_insereConsulta
 DROP PROCEDURE IF EXISTS `proc_insereConsulta`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_insereConsulta`(IN dataHora DATETIME, IN motivo VARCHAR(200), IN Medicos_codMedicos INT, IN Paciente_codPacientes INT)
+BEGIN
+	INSERT INTO `psf_luizedaiana`.`consultas`
+	(
+		`dataHora`,
+		`motivo`,
+		`MEDICOS_codMEDICOS`,
+		`PACIENTES_codPACIENTES`)
+	VALUES(
+		dataHora,
+		motivo,
+		Medicos_codMedicos,
+		Paciente_codPacientes
+	);
+
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_insereLogin
 DROP PROCEDURE IF EXISTS `proc_insereLogin`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_insereLogin`(IN usuario VARCHAR(100), IN senha VARCHAR(100))
+BEGIN
+	INSERT INTO `psf_luizedaiana`.`usuarios`
+	(
+	`nome`,
+	`senha`
+    )
+	VALUES
+	(
+	nome,
+	senha
+    );
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_insereMedico
 DROP PROCEDURE IF EXISTS `proc_insereMedico`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_insereMedico`(IN nomeMed VARCHAR(100), IN crmMed VARCHAR(45), IN espMed VARCHAR(200))
+BEGIN
+	INSERT INTO `psf_luizedaiana`.`medicos`
+	(
+	`nome`,
+	`crm`,
+	`especialidade`
+    )
+	VALUES
+	(
+	nomeMed,
+	crmMed,
+	espMed
+    );
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_inserePaciente
 DROP PROCEDURE IF EXISTS `proc_inserePaciente`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_inserePaciente`(IN cpfPaciente VARCHAR(100), 
+										IN nomePaciente VARCHAR(100), 
+                                        IN telefone VARCHAR(45), 
+                                        IN endereco VARCHAR(100))
+BEGIN
+	INSERT INTO `psf_luizedaiana`.`pacientes`
+	(
+	`cpf`,
+	`nome`,
+	`telefone`,
+	`endereco`)
+	VALUES
+	(
+	cpfPaciente,
+	nomePaciente,
+	telefone,
+	endereco
+    );
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_insereReceita
 DROP PROCEDURE IF EXISTS `proc_insereReceita`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_insereReceita`(IN meds VARCHAR(100), IN posologia VARCHAR(200), IN codConsulta INT, IN codMed INT, IN codPac INT)
+BEGIN
+	INSERT INTO `psf_luizedaiana`.`receitas`
+	(
+	`medicamentos`,
+	`posologia`,
+	`consultas_codCONSULTA`,
+	`consultas_MEDICOS_codMEDICOS`,
+	`consultas_PACIENTES_codPACIENTES`)
+	VALUES
+	(
+	meds,
+	posologia,
+	codConsulta,
+	codMed,
+	codPac
+    );
+
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaConsMed
 DROP PROCEDURE IF EXISTS `proc_listaConsMed`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaConsMed`(
+	IN `codMed` INT
+)
+BEGIN
+
+SELECT COUNT(*) INTO @contador 
+FROM consultas AS C
+WHERE C.MEDICOS_codMEDICOS = codMed;
+
+IF(@contador = 0)
+	THEN
+		SELECT "Médico não possui consultas ou não existe!" AS erro;
+	ELSE
+		SELECT C.codConsulta AS 'Código',
+		date_format(C.dataHora, "%d/%m/%Y, %H:%i") AS 'Data e Hora',
+        C.motivo AS 'Motivo',
+        M.nome AS 'Nome do Médico',
+        P.nome AS 'Nome do Paciente'
+        FROM CONSULTAS AS C
+        INNER JOIN MEDICOS AS M
+        INNER JOIN PACIENTES AS P
+        ON C.MEDICOS_codMEDICOS = M.codMEDICOS
+		AND C.PACIENTES_codPACIENTES = P.codPACIENTES
+    	WHERE M.codMEDICOS = codMed;
+END IF;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaConsPac
 DROP PROCEDURE IF EXISTS `proc_listaConsPac`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaConsPac`(IN codPac INT)
+BEGIN
+	SELECT C.codConsulta AS 'Código',
+		   date_format(C.dataHora, "%d/%m/%Y, %H:%i") AS 'Data e Hora',
+           C.motivo AS 'Motivo',
+           M.nome AS 'Nome do Médico',
+           P.nome AS 'Nome do Paciente'
+           FROM CONSULTA AS C
+           INNER JOIN MEDICOS AS M
+           INNER JOIN PACIENTES AS P
+           ON C.MEDICOS_codMEDICOS = M.codMEDICOS
+           AND C.PACIENTES_codPACIENTES = P.codPACIENTES
+           WHERE P.codPACIENTES = codPac;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaConsultas
 DROP PROCEDURE IF EXISTS `proc_listaConsultas`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaConsultas`()
+BEGIN
+	SELECT C.codConsulta AS 'Código',
+		   date_format(C.dataHora, "%d/%m/%Y, %H:%i") AS 'Data e Hora',
+           C.motivo AS 'Motivo',
+           M.nome AS 'Nome do Médico',
+           P.nome AS 'Nome do Paciente'
+           FROM CONSULTAS AS C
+           INNER JOIN MEDICOS AS M
+           INNER JOIN PACIENTES AS P
+           ON C.MEDICOS_codMEDICOS = M.codMEDICOS
+           AND C.PACIENTES_codPACIENTES = P.codPACIENTES;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaMedicos
 DROP PROCEDURE IF EXISTS `proc_listaMedicos`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaMedicos`()
+BEGIN
+	SELECT *
+	FROM `psf_luizedaiana`.`medicos`;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaPacientes
 DROP PROCEDURE IF EXISTS `proc_listaPacientes`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaPacientes`()
+BEGIN
+	SELECT *
+	FROM `psf_luizedaiana`.`pacientes`;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_listaReceitas
 DROP PROCEDURE IF EXISTS `proc_listaReceitas`;
 DELIMITER //
-//
+CREATE PROCEDURE `proc_listaReceitas`()
+BEGIN
+	SELECT R.codReceita AS 'Código',
+		   R.medicamento AS 'Medicamento(s)',
+           R.posologia AS 'posologia',
+           C.codConsulta AS 'Código da Consulta',
+           M.nome AS 'Nome do médico',
+           P.nome AS 'Nome do paciente'
+           FROM RECEITAS AS R
+           INNER JOIN CONSULTAS AS C
+           INNER JOIN MEDICOS AS M
+           INNER JOIN PACIENTES AS P
+           ON R.consultas_codCONSULTA = C.codCONSULTA
+           AND R.consultas_MEDICOS_codMEDICOS = M.codMEDICOS
+           AND R.consultas_PACIENTES_codPACIENTES = P.codPACIENTES;
+END//
 DELIMITER ;
 
 -- Copiando estrutura para trigger psf_luizedaiana.tri_FormataNomeTelefone
@@ -356,19 +595,28 @@ SET SQL_MODE=@OLDTMP_SQL_MODE;
 DROP VIEW IF EXISTS `v_clientetelefone`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_clientetelefone`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientetelefone` AS (select `pac`.`nome` AS `nome`,`pac`.`telefone` AS `telefone`,`pac`.`endereco` AS `endereco` from `pacientes` `pac` where `pac`.`telefone` is not null);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientetelefone` AS (
+	SELECT nome, telefone, endereco FROM pacientes AS pac
+	WHERE telefone IS NOT NULL
+) ;
 
 -- Copiando estrutura para view psf_luizedaiana.v_clinicosgerais
 DROP VIEW IF EXISTS `v_clinicosgerais`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_clinicosgerais`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clinicosgerais` AS (select `medicos`.`nome` AS `nome`,`medicos`.`crm` AS `crm` from `medicos` where `medicos`.`especialidade` = 'Clínico Geral');
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clinicosgerais` AS (
+	SELECT nome, crm FROM medicos
+	WHERE especialidade = "Clínico Geral"
+) ;
 
 -- Copiando estrutura para view psf_luizedaiana.v_consultas
 DROP VIEW IF EXISTS `v_consultas`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `v_consultas`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_consultas` AS (select date_format(`consultas`.`dataHora`,'%d/%m/%Y %H:%m:%s') AS `Data e Hora`,`consultas`.`motivo` AS `Motivo` from `consultas`);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_consultas` AS (
+	SELECT DATE_FORMAT(dataHora, "%d/%m/%Y %H:%m:%s") AS "Data e Hora", motivo AS "Motivo"
+	FROM consultas
+) ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
