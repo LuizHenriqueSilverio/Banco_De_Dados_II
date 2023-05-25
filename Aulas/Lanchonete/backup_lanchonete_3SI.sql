@@ -280,13 +280,21 @@ CREATE PROCEDURE `proc_relatorioVendasPorCliente`(
 )
 BEGIN
 
-SELECT V.codVenda, DATE_FORMAT(V.dataHora, "%d/%m/%Y %H:%i") AS dataHora, C.nome 
-FROM venda AS V 
-INNER JOIN cliente AS C
-ON V.CLIENTE_codCliente = C.codCliente
-WHERE V.CLIENTE_codCliente = codClientePesquisa
-ORDER BY V.codVenda;
+SELECT COUNT(*) INTO @contador 
+FROM venda AS V
+WHERE V.CLIENTE_codCliente = codClientePesquisa;
 
+IF(@contador = 0)
+	THEN
+		SELECT "Cliente não realizou nenhuma compra!" AS erro;
+	ELSE
+		SELECT V.codVenda, DATE_FORMAT(V.dataHora, "%d/%m/%Y %H:%i") AS dataHora, C.nome 
+		FROM venda AS V 
+		INNER JOIN cliente AS C
+		ON V.CLIENTE_codCliente = C.codCliente
+		WHERE V.CLIENTE_codCliente = codClientePesquisa
+		ORDER BY V.codVenda;
+END IF;
 END//
 DELIMITER ;
 
