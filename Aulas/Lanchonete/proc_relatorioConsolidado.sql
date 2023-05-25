@@ -1,5 +1,7 @@
 # Relatório consolidado para mostrar todas as vendas para determinado cliente
 
-SELECT V.codVenda, DATE_FORMAT(V.dataHora, "%d/%m/%Y %H:%i"), C.nome FROM venda AS V 
+SELECT V.codVenda, DATE_FORMAT(V.dataHora, "%d/%m/%Y %H:%i") AS dataHora, C.nome 
+FROM venda AS V 
 INNER JOIN cliente AS C
-ON V.CLIENTE_codCliente = C.codCliente;
+ON V.CLIENTE_codCliente = C.codCliente
+ORDER BY V.codVenda;
