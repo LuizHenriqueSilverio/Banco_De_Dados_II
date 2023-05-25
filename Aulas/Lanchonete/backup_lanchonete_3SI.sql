@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `produto` (
   CONSTRAINT `fk_PRODUTO_MARCA1` FOREIGN KEY (`MARCA_codMarca`) REFERENCES `marca` (`codMarca`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela lanchonete3si_2023.produto: ~5 rows (aproximadamente)
+-- Copiando dados para a tabela lanchonete3si_2023.produto: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
 INSERT INTO `produto` (`codProduto`, `nome`, `precoCusto`, `precoVenda`, `margemLucro`, `dataValidade`, `quantidadeEstoque`, `quantidadeMinima`, `CATEGORIA_codCategoria`, `MARCA_codMarca`) VALUES
 	(1, 'Empada de Palmito', 1.80, 3.60, 100.00, '2022-11-20', 30.00, 10.00, 1, 6),
@@ -269,6 +269,24 @@ BEGIN
 	INSERT INTO produto(nome, precoCusto, precoVenda, categoria_codCategoria, marca_codMarca)
 	VALUES(nomeInserir, precoCustoInserir, precoVendaInserir, categoriaInserir, marcaInserir);
 		
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure lanchonete3si_2023.proc_relatorioVendasPorCliente
+DROP PROCEDURE IF EXISTS `proc_relatorioVendasPorCliente`;
+DELIMITER //
+CREATE PROCEDURE `proc_relatorioVendasPorCliente`(
+	IN `codClientePesquisa` INT
+)
+BEGIN
+
+SELECT V.codVenda, DATE_FORMAT(V.dataHora, "%d/%m/%Y %H:%i") AS dataHora, C.nome 
+FROM venda AS V 
+INNER JOIN cliente AS C
+ON V.CLIENTE_codCliente = C.codCliente
+WHERE V.CLIENTE_codCliente = codClientePesquisa
+ORDER BY V.codVenda;
+
 END//
 DELIMITER ;
 
