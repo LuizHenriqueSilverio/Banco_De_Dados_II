@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS `atividade` (
 
 -- Copiando dados para a tabela computerevents3si.atividade: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `atividade` DISABLE KEYS */;
+INSERT INTO `atividade` (`codAtividade`, `tema`, `dataHoraInicio`, `dataHoraTermino`, `numVagas`, `palestrantes`, `cpfPalestrantes`, `local`, `tipo`, `EVENTO_codEvento`) VALUES
+	(1, 'Processo de construção de software até a precificação', '2023-06-13 09:00:00', '2023-06-13 11:00:00', 400, 'Matheus Allonso', '456.789.123-10', 'Auditório', 'Palestra Presencial', 1);
 /*!40000 ALTER TABLE `atividade` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela computerevents3si.evento
@@ -50,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `evento` (
   PRIMARY KEY (`codEvento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela computerevents3si.evento: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela computerevents3si.evento: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `evento` DISABLE KEYS */;
 INSERT INTO `evento` (`codEvento`, `nome`, `dataInicio`, `dataTermino`) VALUES
 	(1, 'VII Computer Day', '2023-06-13', '2023-06-13');
