@@ -87,6 +87,9 @@ CREATE TABLE IF NOT EXISTS `participante` (
 
 -- Copiando dados para a tabela computerevents3si.participante: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `participante` DISABLE KEYS */;
+INSERT INTO `participante` (`codParticipante`, `nome`, `sobrenome`, `cpf`, `email`, `TURMA_codTurma`) VALUES
+	(1, 'Fabiano', 'Teixeira', '123.456.789-10', 'fabianoteixeira@gmail.com', 5),
+	(2, 'Rosália', 'Silva Telles', '234.567.891-23', 'rosaliast@gmail.com', 3);
 /*!40000 ALTER TABLE `participante` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela computerevents3si.turma
@@ -98,12 +101,12 @@ CREATE TABLE IF NOT EXISTS `turma` (
   PRIMARY KEY (`codTurma`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela computerevents3si.turma: ~8 rows (aproximadamente)
+-- Copiando dados para a tabela computerevents3si.turma: ~11 rows (aproximadamente)
 /*!40000 ALTER TABLE `turma` DISABLE KEYS */;
 INSERT INTO `turma` (`codTurma`, `sigla`, `descricao`) VALUES
 	(1, '1SI', '1º Sistemas de Informação'),
 	(2, '2SI', '2º Sistemas de Informação'),
-	(3, '1SI', '3º Sistemas de Informação'),
+	(3, '3SI', '3º Sistemas de Informação'),
 	(4, '4SI', '4º Sistemas de Informação'),
 	(5, '5SI', '5º Sistemas de Informação'),
 	(6, '6SI', '6º Sistemas de Informação'),
