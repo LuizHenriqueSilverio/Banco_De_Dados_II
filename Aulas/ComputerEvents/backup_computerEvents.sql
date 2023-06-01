@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS `evento` (
 
 -- Copiando dados para a tabela computerevents3si.evento: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `evento` DISABLE KEYS */;
+INSERT INTO `evento` (`codEvento`, `nome`, `dataInicio`, `dataTermino`) VALUES
+	(1, 'VII Computer Day', '2023-06-13', '2023-06-13');
 /*!40000 ALTER TABLE `evento` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela computerevents3si.inscricao
@@ -85,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `participante` (
   CONSTRAINT `fk_PARTICIPANTE_TURMA` FOREIGN KEY (`TURMA_codTurma`) REFERENCES `turma` (`codTurma`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Copiando dados para a tabela computerevents3si.participante: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela computerevents3si.participante: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `participante` DISABLE KEYS */;
 INSERT INTO `participante` (`codParticipante`, `nome`, `sobrenome`, `cpf`, `email`, `TURMA_codTurma`) VALUES
 	(1, 'Fabiano', 'Teixeira', '123.456.789-10', 'fabianoteixeira@gmail.com', 5),
