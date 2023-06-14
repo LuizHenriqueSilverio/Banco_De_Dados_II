@@ -1,13 +1,15 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           10.4.20-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           10.4.28-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              11.3.0.6295
+-- HeidiSQL Versão:              12.5.0.6677
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -15,7 +17,7 @@
 
 -- Copiando estrutura do banco de dados para psf_luizedaiana
 DROP DATABASE IF EXISTS `psf_luizedaiana`;
-CREATE DATABASE IF NOT EXISTS `psf_luizedaiana` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `psf_luizedaiana` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */;
 USE `psf_luizedaiana`;
 
 -- Copiando estrutura para tabela psf_luizedaiana.auditoria
@@ -27,17 +29,16 @@ CREATE TABLE IF NOT EXISTS `auditoria` (
   `dataHora` datetime DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAuditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Registra as principais alterações neste BD.';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Registra as principais alterações neste BD.';
 
--- Copiando dados para a tabela psf_luizedaiana.auditoria: ~5 rows (aproximadamente)
-/*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
+-- Copiando dados para a tabela psf_luizedaiana.auditoria: ~6 rows (aproximadamente)
 INSERT INTO `auditoria` (`idAuditoria`, `acao`, `tabela`, `dataHora`, `usuario`) VALUES
 	(1, 'Novo paciente registrado no sistema. Código: 14. Nome: Rogério Telles. CPF: 584.015.695-41. Telefone: (35) 98145-0486. Endereço: Rua Pica-Pau, Nº58, Monte Verde, Paraguaçu-MG', 'pacientes', '2023-05-02 10:06:04', 'root@localhost'),
 	(2, 'Novo paciente registrado no sistema. Código: 15. Nome: Roberto Silvério. CPF: 081.896.201-59. Telefone: (35)94123-6890. Endereço: Rua Bem-te-vi, Nº57, Macuco, Paraguaçu-MG', 'conta', '2023-05-02 10:23:32', 'root@localhost'),
 	(3, 'Médico excluído do registro. Código: 5. Nome: André Durães. CRM: 48208.', 'medicos', '2023-05-02 10:38:27', 'root@localhost'),
 	(4, 'Novo paciente registrado no sistema. \r\n	Código: 16. Nome: Alberto Telles. CPF: 861.005.568-21. Telefone: . Endereço: RUA PELICANO, Nº556, MACUCO, PARAGUAÇU-MG', 'conta', '2023-05-09 10:45:02', 'luiz@localhost'),
-	(5, 'Novo paciente registrado no sistema. \r\n	Código: 17. Nome: Eminem José. CPF: 047.635.987-22. Telefone: . Endereço: RUA DAS BÉTULAS, Nº654, SANTA LUZIA, MACHADO-MG', 'conta', '2023-05-09 10:46:41', 'luiz@localhost');
-/*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
+	(5, 'Novo paciente registrado no sistema. \r\n	Código: 17. Nome: Eminem José. CPF: 047.635.987-22. Telefone: . Endereço: RUA DAS BÉTULAS, Nº654, SANTA LUZIA, MACHADO-MG', 'conta', '2023-05-09 10:46:41', 'luiz@localhost'),
+	(8, 'Médico excluído do registro. Código: 4. Nome: Pedro Henrique. CRM: 86056.', 'medicos', '2023-06-14 15:47:40', 'root@localhost');
 
 -- Copiando estrutura para tabela psf_luizedaiana.consultas
 DROP TABLE IF EXISTS `consultas`;
@@ -52,15 +53,12 @@ CREATE TABLE IF NOT EXISTS `consultas` (
   KEY `fk_CONSULTAS_PACIENTES1_idx` (`PACIENTES_codPACIENTES`),
   CONSTRAINT `fk_CONSULTAS_MEDICOS` FOREIGN KEY (`MEDICOS_codMEDICOS`) REFERENCES `medicos` (`codMEDICOS`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_CONSULTAS_PACIENTES1` FOREIGN KEY (`PACIENTES_codPACIENTES`) REFERENCES `pacientes` (`codPACIENTES`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Copiando dados para a tabela psf_luizedaiana.consultas: ~3 rows (aproximadamente)
-/*!40000 ALTER TABLE `consultas` DISABLE KEYS */;
+-- Copiando dados para a tabela psf_luizedaiana.consultas: ~2 rows (aproximadamente)
 INSERT INTO `consultas` (`codCONSULTA`, `dataHora`, `motivo`, `MEDICOS_codMEDICOS`, `PACIENTES_codPACIENTES`) VALUES
 	(27, '2022-12-01 15:30:09', 'Paciente reclama de dor de dente constante. Possível cárie.', 3, 3),
-	(28, '2022-12-05 17:00:00', 'Paciente sente dor constante nas pernas.', 2, 4),
-	(29, '2023-04-04 10:41:37', 'Paciente possui dor de coluna crônica', 4, 3);
-/*!40000 ALTER TABLE `consultas` ENABLE KEYS */;
+	(28, '2022-12-05 17:00:00', 'Paciente sente dor constante nas pernas.', 2, 4);
 
 -- Copiando estrutura para tabela psf_luizedaiana.medicos
 DROP TABLE IF EXISTS `medicos`;
@@ -70,15 +68,12 @@ CREATE TABLE IF NOT EXISTS `medicos` (
   `crm` varchar(45) NOT NULL,
   `especialidade` varchar(200) NOT NULL,
   PRIMARY KEY (`codMEDICOS`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Copiando dados para a tabela psf_luizedaiana.medicos: ~3 rows (aproximadamente)
-/*!40000 ALTER TABLE `medicos` DISABLE KEYS */;
+-- Copiando dados para a tabela psf_luizedaiana.medicos: ~2 rows (aproximadamente)
 INSERT INTO `medicos` (`codMEDICOS`, `nome`, `crm`, `especialidade`) VALUES
 	(2, 'Daiana Mendes', '45893', 'Clínico Geral'),
-	(3, 'Luiz Silvério Cunha', '17920', 'Dentista'),
-	(4, 'Pedro Henrique', '86056', 'Clínico Geral');
-/*!40000 ALTER TABLE `medicos` ENABLE KEYS */;
+	(3, 'Luiz Silvério Cunha', '17920', 'Dentista');
 
 -- Copiando estrutura para tabela psf_luizedaiana.pacientes
 DROP TABLE IF EXISTS `pacientes`;
@@ -89,10 +84,9 @@ CREATE TABLE IF NOT EXISTS `pacientes` (
   `telefone` varchar(45) NOT NULL,
   `endereco` varchar(200) NOT NULL,
   PRIMARY KEY (`codPACIENTES`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- Copiando dados para a tabela psf_luizedaiana.pacientes: ~9 rows (aproximadamente)
-/*!40000 ALTER TABLE `pacientes` DISABLE KEYS */;
 INSERT INTO `pacientes` (`codPACIENTES`, `cpf`, `nome`, `telefone`, `endereco`) VALUES
 	(3, '123,456,789-10', 'José da Silva', '35 99999-9999', 'Rua das Acácias, Nº 180, Centro'),
 	(4, '400,289,227-89', 'Gabriel Caproni Pegoraro', '(35) 4002-8922', 'Rua Maria, nº76, Centro, Carvalhópolis-MG'),
@@ -103,7 +97,6 @@ INSERT INTO `pacientes` (`codPACIENTES`, `cpf`, `nome`, `telefone`, `endereco`) 
 	(15, '081.896.201-59', 'Roberto Silvério', '(35)94123-6890', 'Rua Bem-te-vi, Nº57, Macuco, Paraguaçu-MG'),
 	(16, '861.005.568-21', 'Alberto Telles', '(35) 99844-2684', 'RUA PELICANO, Nº556, MACUCO, PARAGUAÇU-MG'),
 	(17, '047.635.987-22', 'Eminem José', '', 'RUA DAS BÉTULAS, Nº654, SANTA LUZIA, MACHADO-MG');
-/*!40000 ALTER TABLE `pacientes` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela psf_luizedaiana.receitas
 DROP TABLE IF EXISTS `receitas`;
@@ -117,11 +110,11 @@ CREATE TABLE IF NOT EXISTS `receitas` (
   PRIMARY KEY (`codRECEITA`,`consultas_codCONSULTA`,`consultas_MEDICOS_codMEDICOS`,`consultas_PACIENTES_codPACIENTES`),
   KEY `fk_receitas_consultas1_idx` (`consultas_codCONSULTA`,`consultas_MEDICOS_codMEDICOS`,`consultas_PACIENTES_codPACIENTES`),
   CONSTRAINT `fk_receitas_consultas1` FOREIGN KEY (`consultas_codCONSULTA`, `consultas_MEDICOS_codMEDICOS`, `consultas_PACIENTES_codPACIENTES`) REFERENCES `consultas` (`codCONSULTA`, `MEDICOS_codMEDICOS`, `PACIENTES_codPACIENTES`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Copiando dados para a tabela psf_luizedaiana.receitas: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `receitas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `receitas` ENABLE KEYS */;
+-- Copiando dados para a tabela psf_luizedaiana.receitas: ~1 rows (aproximadamente)
+INSERT INTO `receitas` (`codRECEITA`, `medicamentos`, `posologia`, `consultas_codCONSULTA`, `consultas_MEDICOS_codMEDICOS`, `consultas_PACIENTES_codPACIENTES`) VALUES
+	(2, 'Ibuprofeno', 'De 6 em 6 Horas', 28, 2, 4);
 
 -- Copiando estrutura para tabela psf_luizedaiana.usuarios
 DROP TABLE IF EXISTS `usuarios`;
@@ -130,19 +123,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `nome` varchar(100) NOT NULL,
   `senha` varchar(100) NOT NULL,
   PRIMARY KEY (`codusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- Copiando dados para a tabela psf_luizedaiana.usuarios: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
 INSERT INTO `usuarios` (`codusuario`, `nome`, `senha`) VALUES
 	(1, 'adm', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
 	(2, 'Luiz', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f');
-/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 
--- Copiando estrutura para view psf_luizedaiana.v_clientetelefone
-DROP VIEW IF EXISTS `v_clientetelefone`;
+-- Copiando estrutura para view psf_luizedaiana.v_clientetelefoneendereco
+DROP VIEW IF EXISTS `v_clientetelefoneendereco`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
-CREATE TABLE `v_clientetelefone` (
+CREATE TABLE `v_clientetelefoneendereco` (
 	`nome` VARCHAR(200) NOT NULL COLLATE 'utf8_general_ci',
 	`telefone` VARCHAR(45) NOT NULL COLLATE 'utf8_general_ci',
 	`endereco` VARCHAR(200) NOT NULL COLLATE 'utf8_general_ci'
@@ -162,6 +153,16 @@ DROP VIEW IF EXISTS `v_consultas`;
 CREATE TABLE `v_consultas` (
 	`Data e Hora` VARCHAR(24) NULL COLLATE 'utf8mb4_general_ci',
 	`Motivo` VARCHAR(200) NOT NULL COLLATE 'utf8_general_ci'
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view psf_luizedaiana.v_receitaspaciente
+DROP VIEW IF EXISTS `v_receitaspaciente`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `v_receitaspaciente` (
+	`Nome do Paciente` VARCHAR(200) NOT NULL COLLATE 'utf8_general_ci',
+	`CPF do Paciente` VARCHAR(100) NOT NULL COLLATE 'utf8_general_ci',
+	`Medicamento(s)` VARCHAR(100) NOT NULL COLLATE 'utf8_general_ci',
+	`Nome do Médico` VARCHAR(100) NOT NULL COLLATE 'utf8_general_ci'
 ) ENGINE=MyISAM;
 
 -- Copiando estrutura para procedure psf_luizedaiana.proc_alteraConsulta
@@ -523,6 +524,17 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Copiando estrutura para trigger psf_luizedaiana.tri_ApagaConsultaMedico
+DROP TRIGGER IF EXISTS `tri_ApagaConsultaMedico`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tri_ApagaConsultaMedico` BEFORE DELETE ON `medicos` FOR EACH ROW BEGIN
+	DELETE FROM consultas
+	WHERE consultas.MEDICOS_codMEDICOS = OLD.codMEDICOS;
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 -- Copiando estrutura para trigger psf_luizedaiana.tri_FormataNomeTelefone
 DROP TRIGGER IF EXISTS `tri_FormataNomeTelefone`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
@@ -591,11 +603,11 @@ END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Copiando estrutura para view psf_luizedaiana.v_clientetelefone
-DROP VIEW IF EXISTS `v_clientetelefone`;
+-- Copiando estrutura para view psf_luizedaiana.v_clientetelefoneendereco
+DROP VIEW IF EXISTS `v_clientetelefoneendereco`;
 -- Removendo tabela temporária e criando a estrutura VIEW final
-DROP TABLE IF EXISTS `v_clientetelefone`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientetelefone` AS (
+DROP TABLE IF EXISTS `v_clientetelefoneendereco`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_clientetelefoneendereco` AS (
 	SELECT nome, telefone, endereco FROM pacientes AS pac
 	WHERE telefone IS NOT NULL
 ) ;
@@ -618,6 +630,23 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_consultas` AS (
 	FROM consultas
 ) ;
 
+-- Copiando estrutura para view psf_luizedaiana.v_receitaspaciente
+DROP VIEW IF EXISTS `v_receitaspaciente`;
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `v_receitaspaciente`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_receitaspaciente` AS SELECT P.nome AS "Nome do Paciente", 
+		 P.cpf AS "CPF do Paciente", 
+		 R.medicamentos AS "Medicamento(s)",
+		 M.nome AS "Nome do Médico"
+FROM pacientes AS P
+INNER JOIN consultas AS C
+INNER JOIN receitas AS R
+INNER JOIN medicos AS M
+WHERE R.consultas_codConsulta = C.codConsulta
+AND C.pacientes_codPacientes = P.codPacientes
+AND C.medicos_codMedicos = M.codMedicos ;
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
